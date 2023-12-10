@@ -2,6 +2,7 @@ import { Copyright, LockOutlined } from '@mui/icons-material'
 import { Avatar, Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, Link, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function SignupForm() {
     const [userData,setuserData]=useState({
@@ -10,6 +11,7 @@ function SignupForm() {
         password:'',
         confirmPassword:''
     })
+    const navigate=useNavigate();
 
     const handleChange=(e)=>{
         const value=e.target.value;
@@ -29,15 +31,27 @@ function SignupForm() {
         console.log(userData)
         axios.post("http://localhost:5000/signup",userData)
         .then((res)=>{
-            console.log(res.data);
+            // console.log(res.data);
+
+            if(res.status==200) alert("signup successfully");
             setuserData({
                 username:"",
                 email:"",
                 password:"",
                 confirmPassword:""
             })
+            navigate('/login');
         }).catch((err)=>{
-            console.log('errrrrr',err)
+            console.log('errrrrr',err.response);
+            
+            if (err.response && err.response.status === 409) {
+                // User not found
+                alert('Email id already exist');
+            } 
+            else {
+                // Other errors
+                alert('An error occurred');
+            }
         })
         
     }
@@ -132,7 +146,6 @@ function SignupForm() {
         </Grid>
       </Box>
     </Box>
-    <Copyright sx={{ mt: 5 }} />
   </Container>
 
   )
