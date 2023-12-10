@@ -22,7 +22,7 @@ function LoginForm() {
          <LockOutlined /> 
          </Avatar>
         <Typography component="h1" variant="h4">
-          Sign in
+          Login
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -55,7 +55,7 @@ function LoginForm() {
           </Button>
           <Grid container>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

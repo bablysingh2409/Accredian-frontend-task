@@ -1,10 +1,46 @@
 import { Copyright, LockOutlined } from '@mui/icons-material'
 import { Avatar, Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, Link, TextField, Typography } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
+import axios from 'axios';
 
 function SignupForm() {
+    const [userData,setuserData]=useState({
+        username:'',
+        email:'',
+        password:'',
+        confirmPassword:''
+    })
 
-    const handleSubmit=()=>{}
+    const handleChange=(e)=>{
+        const value=e.target.value;
+        setuserData({
+            ...userData,
+            [e.target.name]:value
+        })
+        
+    }
+
+    const handleSubmit=(e)=>{
+        e.preventDefault();
+        if(userData.password!==userData.confirmPassword){
+            alert('Your password and confirm password are not same');
+            return;
+        }
+        console.log(userData)
+        axios.post("http://localhost:5000/signup",userData)
+        .then((res)=>{
+            console.log(res.data);
+            setuserData({
+                username:"",
+                email:"",
+                password:"",
+                confirmPassword:""
+            })
+        }).catch((err)=>{
+            console.log('errrrrr',err)
+        })
+        
+    }
   return (
     <Container component="main" maxWidth="xs">
     <CssBaseline />
@@ -22,7 +58,7 @@ function SignupForm() {
       <Typography component="h1" variant="h5">
         Sign up
       </Typography>
-      <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+      <Box component="form" validate="true" onSubmit={handleSubmit} sx={{ mt: 3 }}>
         <Grid container spacing={2}>
           
           <Grid item xs={12} >
@@ -32,7 +68,9 @@ function SignupForm() {
               id="username"
               label="Username"
               name="username"
+              value={userData.username}
               autoComplete="username"
+              onChange={handleChange}
             />
           </Grid>
           <Grid item xs={12}>
@@ -42,7 +80,10 @@ function SignupForm() {
               id="email"
               label="Email Address"
               name="email"
+              type='email'
+              value={userData.email}
               autoComplete="email"
+              onChange={handleChange}
             />
           </Grid>
           <Grid item xs={12}>
@@ -53,6 +94,8 @@ function SignupForm() {
               label="Password"
               type="password"
               id="password"
+              value={userData.password}
+              onChange={handleChange}
               autoComplete="new-password"
             />
           </Grid>
@@ -64,7 +107,9 @@ function SignupForm() {
               label="confirm Password"
               type="password"
               id="confirmPassword"
+              value={userData.confirmPassword}
               autoComplete="confirmPassword"
+              onChange={handleChange}
             />
           </Grid>
           
@@ -80,7 +125,7 @@ function SignupForm() {
         </Button>
         <Grid container justifyContent="flex-end">
           <Grid item>
-            <Link href="#" variant="body2">
+            <Link href="/login" variant="body2">
               Already have an account? Sign in
             </Link>
           </Grid>
